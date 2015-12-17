@@ -1,0 +1,109 @@
+/* CURRENTLY IN: styles/main.css */
+
+.mdl-button {
+    text-align: center;
+    vertical-align: middle;
+    margin: 0;
+    width: 200px;
+    height: 75px;
+}
+
+<<<<<<< HEAD
+.green {
+    background: green;
+}
+
+.blue {
+    background: blue;
+}
+
+.red {
+    background: red;
+}
+
+.yellow {
+    background: yellow;
+}
+
+
+.button-start {
+    background-color: rgb(255,255,255);
+=======
+.button-green {
+    background-color: green;
+}
+
+.button-blue {
+    background-color: blue;
+}
+
+.button-red {
+    background-color: red;
+}
+
+.button-yellow {
+    background-color: yellow;
+}
+
+.button-start {
+    background-color: rgb(204, 204, 255);
+>>>>>>> a2c078f86a782369d9e824c20e991c3bc4050568
+}
+
+.start {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header {
+    width: 100%;
+    min-height: 20px;
+    border: 1px solid black;
+}
+
+.game{
+    display: flex;
+    border: 1px solid green;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-container {
+    display: inline-block;
+    padding: 20px;
+}
+
+
+/*
+    generic flex-box block
+*/
+
+.flex-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.flex-box--row {
+    flex-direction: row;
+}
+
+.flex-box--wrap {
+    flex-wrap: wrap;
+}
+
+.flex-box__end {
+    align-self: flex-end;
+}
+<<<<<<< HEAD
+
+.change-button-color{
+    background-color: purple;
+}
+
+
+
+=======
+>>>>>>> a2c078f86a782369d9e824c20e991c3bc4050568
