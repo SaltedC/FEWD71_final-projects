@@ -75,3 +75,59 @@
 .flex-box__end {
     align-self: flex-end;
 }
+Status API Training Shop Blog About Pricing
+Â© 2015 GitHub, Inc. Terms Privacy Security Contact Help
+.change-button-color{
+    background-color: purple;
+}
+
+.blue {
+    background: blue;
+}
+
+.yellow {
+    background: yellow;
+}
+
+.green {
+    background: green;
+}
+
+.red{
+    background: red;
+}
+
+.blink {
+  -webkit-animation: blink 2s; /* Safari 4+ */
+          animation: blink 2s; 
+animation-iteration-count: 1;
+}
+
+
+@-wekit-keyframes blink {
+
+    25% {
+        background-color: purple;
+    }
+    50% {
+        background-color: white;
+    }
+    75% {
+        background-color:purple;
+    }
+
+}
+
+@keyframes blink {
+   
+    25% {
+        background-color: purple;
+    }
+    50% {
+        background-color: white;
+    }
+    75% {
+        background-color:purple;
+    }
+    
+}

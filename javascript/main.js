@@ -11,165 +11,161 @@ Play sequence for level:
 //if sequence clicked = levelSequence
 //  level++
 
-/* -----------------------------------------------------
---------------make sequence for a given level-----------
---------------------------------------------------------*/
+"use strict";
 
-function getSequence() {
-//return array with 3 zeros and 1 randomly placed one.
-    var sequence = [0,0,0,0];
-    myLocation = Math.floor( Math.random()*4);
-    sequence[myLocation] = 1;
-    return sequence;
-}
 
-function createLevel(level) {
-    levelSequence = [];
-    for (i = 0; i < level; i++) {
-        var oneSequence = getSequence();
-        levelSequence.push(oneSequence);
+    /* -----------------------------------------------------
+    --------------make sequence for a given level-----------
+    --------------------------------------------------------*/
+    //gameSequence is array of numbers between 0-3 which represents
+    //the colors;
+    var gameSequence = [];
+    var status = false;
+    var colors = [
+        'blue',
+        'green',
+        'yellow',
+        'red'
+    ]
+    var turns = 0;
+
+    function getRandomColorNumber() {
+        return Math.floor(Math.random() * 4);
     }
-    return levelSequence
-}
-//-----------------------------------------------------------
 
-/*-----------------------------------------------------------
--------onClick Play Game changes background color-----------
-------------of game button with value of 1-------------------
-------------------------------------------------------------*/
-var currentLevel = 4;
-// set currentLevelSequence to [1,0,0,0] for trial purposes
-// var currentLevelSequence = [[1,0,0,0], [1,0,0,0]];
-var currentLevelSequence = createLevel(currentLevel);
-console.log(currentLevelSequence);
+    function addNewSequence(colorNumber, element) {
 
+        gameSequence.push(colorNumber);
+        turns++;
 
-//On click play game button, causes buttons to change background color
-// Do not know how to make this happen sequentially
-$('.button-start').on('click', function() {
-    console.log('you clicked me!');
-    console.log(currentLevelSequence)
-    for (var i = 0; i < currentLevelSequence.length; i++) {
-        console.log('This is current sequence: ' + currentLevelSequence[i]);
-        var sequenceArray = currentLevelSequence[i];
-        var buttonSelector = getButton(sequenceArray);
-        changeButtonColor(buttonSelector);
-    };
-});
-
-// Return text for buttonSelector based on index of 1 in sequenceArray
-// Use as argument for changeButtonColor
-function getButton(sequenceArray) {
-    var whichButton;
-    if (sequenceArray[0] === 1) {
-        whichButton = '.button-blue';
-    } else if (sequenceArray[1] === 1) {
-        whichButton = '.button-green';
-    } else if (sequenceArray[2] === 1) {
-        whichButton = '.button-yellow';
-    } else if (sequenceArray[3] === 1) {
-        whichButton = '.button-red';
     }
-    return whichButton;
-}
 
-// Change background color of element with buttonSelector class
-//takes getButton output
-function changeButtonColor(buttonSelector) {
-    var $button = $(buttonSelector),
-    x = 500,
-    originalColor = $button.css('background');
 
-    $button.css('background', 'purple');
-    setTimeout(function() {
-    $button.css('background', originalColor);
-    }, x);
-}
 
-function getUserSequence() {
-    var userSequence = [];
-    var countClicks = 0;
-    $('.button-blue').on('click', function(){
-        console.log('You clicked blue!');
-        // var blue = [1,0,0,0];
-        userSequence.push('blue');
-        countClicks++;
-        console.log(userSequence, countClicks);
-        if (currentLevelSequence[(countClicks - 1)] == [1, 0, 0, 0]) {
-            console.log('Right!');
+    var buttonsGroup = document.querySelector('button');
+    var buttonsGroup = $('button');
+    var animateTurns = 0;
+
+    buttonsGroup.on('animationend', function(e) {
+        console.log('what is event in animationend', e);
+        // this.classList.remove('blink');
+        $(this).removeClass('blink');
+
+        animateTurns = animateTurns + 1;
+        console.log('what is animateTurns', animateTurns);
+        console.log('what is sequence', gameSequence[animateTurns]);
+        triggerColor(gameSequence[animateTurns], $('.' + colors[animateTurns]));
+
+    });
+
+    buttonsGroup.on('webkitAnimationEnd', function(e) {
+        console.log('what is event in animationend webkit', e);
+        $(this).removeClass('blink');
+        animateTurns = animateTurns + 1;
+        triggerColor(gameSequence[animateTurns], $('.' + colors[animateTurns]));
+    });
+
+
+
+
+    function triggerColor(colorNum) {
+        console.log("testing", colorNum);
+        var color = colors[colorNum];
+        var target = $('.' + color);
+        target.addClass('blink');
+    }
+
+
+
+
+    function addNewTurn(element) {
+
+        addNewSequence(getRandomColorNumber(), element);
+
+        //just fire animation once;
+        triggerColor(gameSequence[animateTurns], $('.' + colors[animateTurns]));
+        //iterate thru existing sequence + new sequence just added above
+
+
+    }
+
+
+    function setNewGame() {
+        gameSequence = null;
+        gameSequence = [];
+        addNewTurn($(this));
+    }
+
+
+    function isProceed() {
+
+    }
+
+    function isUserSequenceCorrect(userColorNum, userTurn) {
+        return (gameSequence[userTurn - 1] === userColorNum);
+    }
+
+
+
+    function getColorNumber(domClasses, colors) {
+        var colorNum;
+        // iterate through all the css classes
+        for (var i = 0; i < domClasses.length; i++) {
+            //indexOf returns an array position or -1 for not exit
+
+            //colorNum is going to grab either -1 or the index position
+            colorNum = colors.indexOf(domClasses[i]);
+
+            if (colorNum >= 0) {
+                return colorNum;
+            }
+        }
+    }
+
+    function endGame() {
+        alert('you lose');
+    }
+
+
+    function colorClick() {
+
+        //returns an array of classes;
+        //goal on click, find out what color button I am
+        //step 1: grab all the classes of this button
+
+        var classes = $(this)[0].classList;
+
+        //step 2: find out what the color number is of this number
+        //because this is what the user pressed;
+        var colorNum = getColorNumber(classes, colors);
+
+
+        //animation via transition
+        triggerColor(colorNum);
+
+        //step 3: 
+        var correct = isUserSequenceCorrect(colorNum, turns);
+
+        //step 4: if the user pressed the correct color, proceed to next turn;
+        if (correct) {
+            addNewTurn()
+            console.log('what is new turn', turns);
         } else {
-            console.log(currentLevelSequence[(countClicks-1)]);
-        };
-        // console.log(userSequence);
-    });
+            endGame();
+        }
+    }
 
-    $('.button-yellow').on('click', function(){
-        console.log('You clicked yellow!');
-        // var blue = [1,0,0,0];
-        userSequence.push('yellow');
-        countClicks++;
-        console.log(userSequence, countClicks);
-    });
+    $('.color-button').on('click', colorClick)
+    $('.button-start').on('click', setNewGame);
 
-    $('.button-red').on('click', function(){
-        console.log('You clicked red!');
-        // var blue = [1,0,0,0];
-        userSequence.push('red');
-        countClicks++;
-        console.log(userSequence, countClicks);
-    });
+    // initialize buttons
+    // 
+    function createButtons() {
 
-    $('.button-green').on('click', function(){
-        console.log('You clicked green!');
-        // var green = [1,0,0,0];
-        userSequence.push('green');
-        countClicks++;
-        console.log(userSequence, countClicks);
-    });
-    return userSequence;
-    console.log(userSequence);
-    console.log(countClicks);
-
-};
-
-// if # user clicks == level, compare userSequence to levelSequence
-    // if (countClicks === currentLevel) {
-    // console.log(userSequence);
-    // }
-
-
-thisUserSequence = getUserSequence();
-console.log(thisUserSequence);
-
-/*-------------------------------------------------
--------------Record user clicks--------------------
---------------------------------------------------*/
-// var userSequence = [];
-// $('.button-blue').on('click', function(){
-//     console.log('You clicked blue!');
-//     // var blue = [1,0,0,0];
-//     userSequence.push('blue');
-//     // console.log(userSequence);
-// });
-
-// $('.button-yellow').on('click', function(){
-//     console.log('You clicked yellow!');
-//     // var blue = [1,0,0,0];
-//     userSequence.push('yellow');
-//     // console.log(userSequence);
-// });
-
-// $('.button-red').on('click', function(){
-//     console.log('You clicked red!');
-//     // var blue = [1,0,0,0];
-//     userSequence.push('red');
-//     // console.log(userSequence);
-// });
-
-// $('.button-green').on('click', function(){
-//     console.log('You clicked green!');
-//     // var green = [1,0,0,0];
-//     userSequence.push('green');
-//     console.log(userSequence);
-// });
-//_____________________________________________
+        var button;
+        for (var i = 0; i < colors.length; i++) {
+            button = '<article class="button-container"><button class="mdl-button color-button' + ' ' + colors[i] + '"></button></article>';
+            $('.game').prepend(button);
+            console.log(button);
+        }
+    }
